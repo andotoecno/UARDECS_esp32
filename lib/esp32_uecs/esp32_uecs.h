@@ -13,12 +13,13 @@
 
 #include <Ethernet2.h>
 #include <EthernetUdp2.h>
+#include <WiFi.h>
 
 #include <Arduino.h>
 #include <SPI.h>   
 #include <EEPROM.h>
 #include <stdio.h>
-#include <avr/pgmspace.h>
+// #include <avr/pgmspace.h>
 
 
 #define CHOICES(s) sizeof(s)/sizeof(s[0])

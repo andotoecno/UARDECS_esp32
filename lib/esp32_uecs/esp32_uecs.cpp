@@ -4,8 +4,8 @@
  char UECStempStr20[MAX_TYPE_CHAR];//sub buffer
 EthernetUDP UECS_UDP16520;
 EthernetUDP UECS_UDP16529;
-EthernetServer UECSlogserver(80);
-EthernetClient UECSclient;
+WiFiServer UECSlogserver(80);
+WiFiClient UECSclient;
 
 struct UECSTEMPCCM UECStempCCM;
 
