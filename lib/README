@@ -50,10 +50,9 @@ More information about PlatformIO Library Dependency Finder
 ### 移植に伴う書き換え
 - 抽象化されているstrictなどは残して、Ethernetに関する部分だけ書き換えたい
 - Ethenetに関連するクラスは3種類
-  - server
-  - client
+  - Ethernet server,client → WiFi server,client
     - ログ用のサーバ
     - ノードに直接アクセスしたときにHTML等表示
-  - UDP
+  - EthernetUDP → AsyncUDP
     - UDP16520→データ送信用のポート、メイン
     - UDP16529→スキャンポート？

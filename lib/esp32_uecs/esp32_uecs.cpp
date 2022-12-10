@@ -1056,7 +1056,13 @@ void UECSsetup(){
 delay(500);
 pinMode(U_InitPin,INPUT_PULLUP);
 
+Serial.begin(115200);
 WiFi.begin(WiFi_SSID, WiFi_PASS);
+while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.println("connecting");
+  }
+   Serial.println(WiFi.localIP());
 
 if(digitalRead(U_InitPin) == U_InitPin_Sense || UECS_EEPROM_readLong(EEPROM_OFFSET_IP)==-1)
 	{
