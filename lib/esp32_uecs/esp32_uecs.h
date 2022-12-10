@@ -348,6 +348,9 @@ char _ccmLevel);
 
 void UECSsetCCM(boolean _sender, signed char _num, const char* _name, const char* _type, const char* _unit, unsigned short _priority, unsigned char _decimal,  char _ccmLevel);
 
+extern const char * WiFi_SSID;
+extern const char * WiFi_PASS;
+
 extern const int U_MAX_CCM;
 extern const int U_HtmlLine;
 extern struct UECSUserHtml U_html[];

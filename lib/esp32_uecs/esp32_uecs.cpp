@@ -1056,6 +1056,8 @@ void UECSsetup(){
 delay(500);
 pinMode(U_InitPin,INPUT_PULLUP);
 
+WiFi.begin(WiFi_SSID, WiFi_PASS);
+
 if(digitalRead(U_InitPin) == U_InitPin_Sense || UECS_EEPROM_readLong(EEPROM_OFFSET_IP)==-1)
 	{
 	U_orgAttribute.status|=STATUS_SAFEMODE;
