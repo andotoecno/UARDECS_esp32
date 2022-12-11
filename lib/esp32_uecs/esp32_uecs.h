@@ -10,16 +10,12 @@
 #ifndef Uardecs_h
 #define Uardecs_h
 
-
-#include <Ethernet2.h>
-#include <EthernetUdp2.h>
 #include <WiFi.h>
-
+#include <AsyncUDP.h>
 #include <Arduino.h>
 #include <SPI.h>   
 #include <EEPROM.h>
 #include <stdio.h>
-// #include <avr/pgmspace.h>
 
 
 #define CHOICES(s) sizeof(s)/sizeof(s[0])
@@ -377,8 +373,8 @@ extern unsigned char UECSsyscounter60s;
 extern unsigned long UECSsyscounter1s;
 extern unsigned long UECSnowmillis;
 extern unsigned long UECSlastmillis;
-extern EthernetUDP UECS_UDP16520;
-extern EthernetUDP UECS_UDP16529;
+extern AsyncUDP UECS_UDP16520;
+extern AsyncUDP UECS_UDP16529;
 
 
 //Form UecsLetterCheck.h
