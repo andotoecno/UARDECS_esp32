@@ -121,7 +121,7 @@ if(U_orgAttribute.status&STATUS_SAFEMODE)
         - 受信時にリモートのIPの指定なし
         - 送信時はユニキャスト
 
-### 移植に伴う書き換え
+### Ethernet to Wifiに伴う書き換え
 - 抽象化されているstrictなどは残して、Ethernetに関する部分だけ書き換えたい
 
 - Ethernet server,client → WiFi server,clientの移行
@@ -164,6 +164,19 @@ if(U_orgAttribute.status&STATUS_SAFEMODE)
       - 元実装だとコメントアウトで未使用だけど、一応Async UDPに存在するメソッドのcloseに置き換え
   - Ethenet.begin() → WiFi.config(), WiFi.begin()
 
+### Arduino to ESP32に伴う仕様変更
+- EEPROM
+  - EEPROMの保存領域確保にbegin(確保したいバイト数)が必要
+  - EEPROMのread/write関数は同じであるが、ESP32はwriteの後にcommit関数の実行が必要
+
+
+### web pageの仕組み
+**HTTPcheckRequest()**
+- アクセス時(server.available())に、URLに応じて表示するページを選択している
+- 存在しないページであれば Errorを表示
+
+
 ###　実装したい機能
 - WIFiのSSID,passもノードのwebpageのアクセスして設定
 - 受診失敗時のリセット
+- デフォルトipはユーザーが設定できるように

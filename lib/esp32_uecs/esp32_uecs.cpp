@@ -574,6 +574,7 @@ void UECSautomaticValidManager(unsigned long td)
 
 void UECS_EEPROM_writeLong(int ee, long value)
 {
+	int skip_counter = 0;
 	byte *p = (byte *)(void *)&value;
 	for (unsigned int i = 0; i < sizeof(value); i++)
 	{
@@ -581,7 +582,14 @@ void UECS_EEPROM_writeLong(int ee, long value)
 		{
 			EEPROM.write(ee, p[i]);
 		}
+		else
+			skip_counter++;
 		ee++;
+	}
+	// writing EEPROM, ESP32 specification
+	if (skip_counter < sizeof(value))
+	{
+		EEPROM.commit();
 	}
 }
 
@@ -1005,6 +1013,7 @@ void HTTPGetFormDataLANSettingPage()
 	int progPos = 0;
 	long UECStempValue[20];
 	unsigned char tempDecimal;
+	int skip_counter = 0;
 	//
 	// MYIP      4
 	// SUBNET    4
@@ -1055,13 +1064,25 @@ void HTTPGetFormDataLANSettingPage()
 	// set "order" high-byte
 	UECStempValue[19] = (UECStempValue[18] / 256) & 127;
 
+	skip_counter = 0;
 	for (int i = 0; i < 20; i++)
 	{
 		if (EEPROM.read(EEPROM_OFFSET_DATATOP + i) != (unsigned char)UECStempValue[i]) // skip same value
 		{
 			EEPROM.write(EEPROM_OFFSET_DATATOP + i, (unsigned char)UECStempValue[i]);
 			U_orgAttribute.status |= STATUS_NEEDRESET;
+
+			// EEPROM.commit();
+			Serial.println("save UECS main buf");
+			// delay(100);
 		}
+		else skip_counter++;
+	}
+	// writing EEPROM, ESP32 specification
+	Serial.println(skip_counter);
+	if (skip_counter < 20)
+	{
+EEPROM.commit();
 	}
 
 	//---------------------------NODE NAME
@@ -1107,7 +1128,17 @@ void HTTPGetFormDataLANSettingPage()
 		if (EEPROM.read(EEPROM_OFFSET_NODENAME + i) != U_nodename[i]) // skip same value
 		{
 			EEPROM.write(EEPROM_OFFSET_NODENAME + i, U_nodename[i]);
+			// EEPROM.commit();
+			// delay(100);
+			Serial.println("save UECS Node Name");
 		}
+		else skip_counter++;
+	}
+	// writing EEPROM, ESP32 specification
+	Serial.println(skip_counter);
+	if (skip_counter < 20)
+	{
+EEPROM.commit();
 	}
 
 	return;
@@ -1127,29 +1158,35 @@ void HTTPcheckRequest()
 		UECSbuffer[UECSclient.read((uint8_t *)UECSbuffer, BUF_SIZE - 1)] = '\0';
 
 		HTTPFilterToBuffer(); // Get first line before "&S=" and eliminate unnecessary code
+		Serial.println(UECSbuffer);
 		int progPos = 0;
+		// Top Page
 		if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP0[0]), &progPos))
 		{
 			HTTPsendPageIndex();
 		}
+		// CCM page
 		else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP1[0]), &progPos))
 		{
 			HTTPsendPageCCM();
 		}
+		// LAN setting page
 		else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP2[0]), &progPos))
 		{
 			HTTPsendPageLANSetting();
 		}
+		// send CCM
 		else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP1A[0]), &progPos)) // include form data
 		{
 			HTTPGetFormDataCCMPage();
 			// HTTPsendPageCCM();
 			HTTPPrintRedirectP1();
 		}
+		// send LAN setting
 		else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP2A[0]), &progPos)) // include form data
 		{
-			HTTPGetFormDataLANSettingPage();
-			HTTPsendPageLANSetting();
+			HTTPGetFormDataLANSettingPage(); // save setting
+			HTTPsendPageLANSetting();		 // reload LAN setting page
 		}
 		else
 		{
@@ -1212,15 +1249,19 @@ void UECSsetup()
 	delay(500);
 	pinMode(U_InitPin, INPUT_PULLUP);
 
+
+	EEPROM.begin(1024);
 	Serial.begin(115200);
 
 	if (digitalRead(U_InitPin) == U_InitPin_Sense || UECS_EEPROM_readLong(EEPROM_OFFSET_IP) == -1)
 	{
 		U_orgAttribute.status |= STATUS_SAFEMODE;
+		Serial.println("Wakeup with safe mode");
 	}
 	else
 	{
 		U_orgAttribute.status &= STATUS_SAFEMODE_MASK; // Release safemode
+		Serial.println("Wakeup with CCM mode");
 	}
 
 	UECSinitOrgAttribute();
@@ -1234,10 +1275,10 @@ void UECSstartEthernet()
 
 	if (U_orgAttribute.status & STATUS_SAFEMODE)
 	{
-		byte defip[] = {192, 168, 1, 7};
+		byte defip[] = {192, 168, 33, 7};
 		byte defsubnet[] = {255, 255, 255, 0};
 		byte defdummy[] = {0, 0, 0, 0};
-		if (!WiFi.config(defip, defip, defsubnet))
+		if (!WiFi.config(defip, defip, defsubnet, defdummy))
 		{ // ip,gateway,subnet,dns
 			Serial.println("Failed to configure!");
 		}
@@ -1253,12 +1294,18 @@ void UECSstartEthernet()
 	WiFi.begin(WiFi_SSID, WiFi_PASS);
 	while (WiFi.status() != WL_CONNECTED)
 	{
-		delay(500);
+		delay(2000);
 		Serial.println("WiFi connecting");
 	}
 	Serial.println("WiFi connected");
 	Serial.println(WiFi.localIP());
-
+	char ip[20], gateway[20], subnet[20];
+	sprintf(ip, "%d.%d.%d.%d", U_orgAttribute.ip[0], U_orgAttribute.ip[1], U_orgAttribute.ip[2], U_orgAttribute.ip[3]);
+	sprintf(gateway, "%d.%d.%d.%d", U_orgAttribute.gateway[0], U_orgAttribute.gateway[1], U_orgAttribute.gateway[2], U_orgAttribute.gateway[3]);
+	sprintf(subnet, "%d.%d.%d.%d", U_orgAttribute.subnet[0], U_orgAttribute.subnet[1], U_orgAttribute.subnet[2], U_orgAttribute.subnet[3]);
+	Serial.println(ip);
+	Serial.println(gateway);
+	Serial.println(subnet);
 	UECSlogserver.begin();
 }
 
