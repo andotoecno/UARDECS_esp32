@@ -30,8 +30,8 @@
 
 
 ////////////////////////////WiFi setting
-const char * WiFi_SSID = "Sense6YN";
-const char * WiFi_PASS = "pokemon405";
+const char * WiFi_SSID = "";
+const char * WiFi_PASS = "";
 
 
 /////////////////////////////////////
