@@ -26,7 +26,7 @@
 //D3ピンがIPアドレスのリセット用に使用されています(変更可)
 
 #include <EEPROM.h>
-#include "esp32_uecs.h"
+#include "UARDECS_esp32.h"
 
 
 ////////////////////////////WiFi setting
