@@ -1,4 +1,4 @@
-#include <esp32_uecs.h>
+#include <UARDECS_esp32.h>
 
 char UECSbuffer[BUF_SIZE];		   // main buffer
 char UECStempStr20[MAX_TYPE_CHAR]; // sub buffer
@@ -1275,9 +1275,6 @@ void UECSstartEthernet()
 
 	if (U_orgAttribute.status & STATUS_SAFEMODE)
 	{
-		byte defip[] = {192, 168, 33, 7};
-		byte defsubnet[] = {255, 255, 255, 0};
-		byte defdummy[] = {0, 0, 0, 0};
 		if (!WiFi.config(defip, defip, defsubnet, defdummy))
 		{ // ip,gateway,subnet,dns
 			Serial.println("Failed to configure!");

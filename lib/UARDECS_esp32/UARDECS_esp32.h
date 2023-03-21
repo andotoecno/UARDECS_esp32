@@ -20,6 +20,10 @@
 
 #define CHOICES(s) sizeof(s)/sizeof(s[0])
 
+const char UECSdefaultIPAddress[] PROGMEM="192.168.43.7";
+const byte defip[] = {192, 168, 43, 7};
+const byte defsubnet[] = {255, 255, 255, 0};
+const byte defdummy[] = {0, 0, 0, 0};
 
 //############################################################
 //############################################################
@@ -40,8 +44,6 @@
 /********************************/
 /* ROM CHAR *********************/
 /********************************/
-const char UECSdefaultIPAddress[] PROGMEM="192.168.1.7";
-
 const char UECSccm_XMLHEADER[] PROGMEM="<?xml version=\"1.0\"?><UECS";
 const char UECSccm_UECSVER_E10[] PROGMEM=" ver=\"1.00-E10\">";
 const char UECSccm_DATATYPE[] PROGMEM = "<DATA type=\""; //12 words
