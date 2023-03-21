@@ -46,7 +46,7 @@ More information about PlatformIO Library Dependency Finder
 - https://docs.platformio.org/page/librarymanager/ldf.html
 
 ---
-## youser added info
+## user added info
 
 ### 前提条件
 - ここで参考にしたライブラリおよび説明書はUARDECS ver2.0.0です。
@@ -77,7 +77,7 @@ if(U_orgAttribute.status&STATUS_SAFEMODE)
     }
 ```
   - 説明書によると、DNS、gatewayは使っていないとのこと
-    - DNSはローカルネットワークだから不要だし、gatewayは直接IP指定して通信するため未使用
+    - DNSはローカルネットワークだから不要だし、gatewayは直接IP指定して通信するため未使用だと思われる
   - safeモードで起動した時(if内)にsubnetが0.0.0.0になっているけど大丈夫なのだろうか？
     - defsubnetの255.255.255.0使うべきでは？
     - サブネットマスクとは(復習)
@@ -172,11 +172,16 @@ if(U_orgAttribute.status&STATUS_SAFEMODE)
 
 ### web pageの仕組み
 **HTTPcheckRequest()**
-- アクセス時(server.available())に、URLに応じて表示するページを選択している
-- 存在しないページであれば Errorを表示
+- アクセス時(server.available())に、クエリに応じて表示するページを選択している
+- 存在しないページであれば `Error!`を表示
 
 
-###　実装したい機能
+##　Debug
+- 2023/3/21
+- webページ上の`send`アイコンのクリック時に`GET/1HTTP/1.1`が送られるはずが、`GET/favicon.icoHTTP/1.1`が送られている
+  - faviconはお気に入り登録を押した時のクエリのようで、ウェブページ上のアイコンを押した時の挙動として、ESP32のライブラリの仕様なのか連続で押すとなぜかfaviconになっている
+
+##　ToDo
 - WIFiのSSID,passもノードのwebpageのアクセスして設定
 - 受診失敗時のリセット
 - デフォルトipはユーザーが設定できるように
