@@ -1,4 +1,7 @@
 #include <WiFi.h>
+#include <SPI.h>
+#include <EEPROM.h>
+#include <UARDECS_esp32.h>
 
 void setup(void) {
   Serial.begin(115200);
