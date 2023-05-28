@@ -660,12 +660,13 @@ void HTTPPrintHeader()
 	HTTPAddPGMCharToBuffer(&(UECShtml1A[0])); // </script></HEAD><BODY><CENTER><H1>
 }
 //-----------------------------------------------------------
-void HTTPsendFaviconResponse(){
-  Serial.println(F("----------Favicon GET Request Received"));
-  ClearMainBuffer();
-  HTTPAddPGMCharToBuffer(&(UECShttpHead404_NotFound[0]));
-  HTTPAddPGMCharToBuffer(&(UECShttpHeadConnectionKeepAlive[0]));
-  HTTPCloseBuffer();
+void HTTPsendFaviconResponse()
+{
+	Serial.println(F("----------Favicon GET Request Received"));
+	ClearMainBuffer();
+	HTTPAddPGMCharToBuffer(&(UECShttpHead404_NotFound[0]));
+	HTTPAddPGMCharToBuffer(&(UECShttpHeadConnectionKeepAlive[0]));
+	HTTPCloseBuffer();
 }
 
 void HTTPsendPageError()
@@ -1084,7 +1085,8 @@ void HTTPGetFormDataLANSettingPage()
 			Serial.println("save UECS main buf");
 			// delay(100);
 		}
-		else skip_counter++;
+		else
+			skip_counter++;
 	}
 	// writing EEPROM, ESP32 specification
 	if (skip_counter < 20)
@@ -1139,13 +1141,14 @@ void HTTPGetFormDataLANSettingPage()
 			// delay(100);
 			Serial.println("save UECS Node Name");
 		}
-		else skip_counter++;
+		else
+			skip_counter++;
 	}
 	// writing EEPROM, ESP32 specification
 
 	if (skip_counter < 20)
 	{
-EEPROM.commit();
+		EEPROM.commit();
 	}
 
 	return;
@@ -1160,52 +1163,56 @@ void HTTPcheckRequest()
 
 	if (UECSclient)
 	{
+		if (UECSclient.connected())
+		{
+			if (UECSclient.available())
+			{
+				UECSbuffer[UECSclient.read((uint8_t *)UECSbuffer, BUF_SIZE - 1)] = '\0';
+				HTTPFilterToBuffer(); // Get first line before "&S=" and eliminate unnecessary code
+				Serial.println(UECSbuffer);
 
-		// Add null termination
-		UECSbuffer[UECSclient.read((uint8_t *)UECSbuffer, BUF_SIZE - 1)] = '\0';
-		HTTPFilterToBuffer(); // Get first line before "&S=" and eliminate unnecessary code
-		Serial.println(UECSbuffer);
-		
-		int progPos = 0;
-		// Top Page
+				int progPos = 0;
+				// Top Page
 
-
-		// if (UECSFindPGMChar(UECSbuffer, &(UECSpageFavicon[0]), &progPos)){
-		// 	HTTPsendFaviconResponse();
-		// }
-		if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP0[0]), &progPos))
-		{
-			HTTPsendPageIndex();
-		}
-		// CCM page
-		else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP1[0]), &progPos))
-		{
-			HTTPsendPageCCM();
-		}
-		// LAN setting page
-		else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP2[0]), &progPos))
-		{
-			HTTPsendPageLANSetting();
-		}
-		// send CCM
-		else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP1A[0]), &progPos)) // include form data
-		{
-			HTTPGetFormDataCCMPage();
-			// HTTPsendPageCCM();
-			HTTPPrintRedirectP1();
-		}
-		// send LAN setting
-		else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP2A[0]), &progPos)) // include form data
-		{
-			HTTPGetFormDataLANSettingPage(); // save setting
-			HTTPsendPageLANSetting();		 // reload LAN setting page
-		}
-		else
-		{
-			HTTPsendPageError();
-		}
+				if (UECSFindPGMChar(UECSbuffer, &(UECSpageFavicon[0]), &progPos))
+				{
+					HTTPsendFaviconResponse();
+				}
+				else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP0[0]), &progPos))
+				{
+					HTTPsendPageIndex();
+				}
+				// CCM page
+				else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP1[0]), &progPos))
+				{
+					HTTPsendPageCCM();
+				}
+				// LAN setting page
+				else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP2[0]), &progPos))
+				{
+					HTTPsendPageLANSetting();
+				}
+				// send CCM
+				else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP1A[0]), &progPos)) // include form data
+				{
+					HTTPGetFormDataCCMPage();
+					// HTTPsendPageCCM();
+					HTTPPrintRedirectP1();
+				}
+				// send LAN setting
+				else if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP2A[0]), &progPos)) // include form data
+				{
+					HTTPGetFormDataLANSettingPage(); // save setting
+					HTTPsendPageLANSetting();		 // reload LAN setting page
+				}
+				else
+				{
+					HTTPsendPageError();
+				}
+			}
+			UECSclient.stop();
+		} // end of while
 	}
-	UECSclient.stop();
 }
 
 //////////////////
@@ -1260,7 +1267,6 @@ void UECSsetup()
 {
 	delay(500);
 	pinMode(U_InitPin, INPUT_PULLUP);
-
 
 	EEPROM.begin(1024);
 	Serial.begin(115200);
@@ -1349,7 +1355,6 @@ void UECSloop()
 	// << USER MANAGEMENT >>
 	// 4. udp16520Send
 	HTTPcheckRequest();
-#if 0
 	UECSupdate16520portReceive(&UECStempCCM, UECSnowmillis);
 	UECSupdate16529port(&UECStempCCM);
 	UserEveryLoop();
@@ -1367,6 +1372,7 @@ void UECSloop()
 	{
 		td = (4294967295 - UECSlastmillis) + UECSnowmillis;
 	}
+	// Serial.println(td);
 
 	// over 1msec
 	UECSsyscounter1s += td;
@@ -1398,7 +1404,6 @@ void UECSloop()
 			// U_ccmList[i].old_value=U_ccmList[i].value;
 		}
 	}
-#endif
 }
 //------------------------------------------------------
 void UECSinitOrgAttribute()
