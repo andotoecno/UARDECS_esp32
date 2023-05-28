@@ -20,11 +20,11 @@
 
 #define CHOICES(s) sizeof(s)/sizeof(s[0])
 
-const char UECSdefaultIPAddress[] PROGMEM="192.168.43.7";
-const byte defip[] = {192, 168, 43, 7};
-const byte defsubnet[] = {255, 255, 255, 0};
-const byte defdummy[] = {0, 0, 0, 0};
-
+const char UECSdefaultIPAddress[] PROGMEM="192.168.1.7";
+const byte default_ip[] = {192, 168, 1, 7};
+const byte default_gateway[] = {192, 168, 1, 1};
+const byte default_subnet[] = {255, 255, 255, 0};
+const byte default_dns[] = {192, 168, 1, 1};
 //############################################################
 //############################################################
 
@@ -214,8 +214,11 @@ void UECSautomaticValidManager(unsigned long td);
 
 
 const char UECShttpHead200_OK[] PROGMEM="HTTP/1.1 200 OK\r\n";
+const char UECShttpHead404_NotFound[] PROGMEM = "HTTP/1.1 404 Not Found\r\n";
 const char UECShttpHeadContentType[] PROGMEM="Content-Type: text/html\r\n";
 const char UECShttpHeadConnection[] PROGMEM="Connection: close\r\n\r\n";
+const char UECShttpHeadConnectionKeepAlive[] PROGMEM = "Connection: keep-alive\r\n\r\n";
+
 
 const char UECShtmlTABLECLOSE[] PROGMEM="</TBODY></TABLE>"; // 16 words
 const char UECShtmlRETURNINDEX[] PROGMEM="<P align=\"center\">return<A href=\".\">Top</A></P>";
@@ -261,6 +264,7 @@ const char UECStdtr[] PROGMEM="</TD></TR>";
 const char UECShtmlHR[] PROGMEM="<HR>";
 const char UECSformend[] PROGMEM = "</form>";
 
+const char UECSpageFavicon[] PROGMEM = "GET/favicon.icoHTTP/1.1";
 const char UECSpageError[] PROGMEM = "Error!";
 
 const char UECShtmlIndex[] PROGMEM = "<a href=\"./1\">Node Status</a><br><br><a href=\"./2\">Network Config</a><br>";

@@ -180,6 +180,9 @@ if(U_orgAttribute.status&STATUS_SAFEMODE)
 - 2023/3/21
 - webページ上の`send`アイコンのクリック時に`GET/1HTTP/1.1`が送られるはずが、`GET/favicon.icoHTTP/1.1`が送られている
   - faviconはお気に入り登録を押した時のクエリのようで、ウェブページ上のアイコンを押した時の挙動として、ESP32のライブラリの仕様なのか連続で押すとなぜかfaviconになっている
+  - これは現在のブラウザの仕様で、何度かクリックするとfaviconがでる仕様らしい
+  - ESP32での回避についてはここが参考になった
+    - https://www.mgo-tec.com/blog-entry-esp32-mjpeg-bmp.html/3
 
 ##　ToDo
 - WIFiのSSID,passもノードのwebpageのアクセスして設定

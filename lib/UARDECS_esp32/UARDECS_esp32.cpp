@@ -660,6 +660,14 @@ void HTTPPrintHeader()
 	HTTPAddPGMCharToBuffer(&(UECShtml1A[0])); // </script></HEAD><BODY><CENTER><H1>
 }
 //-----------------------------------------------------------
+void HTTPsendFaviconResponse(){
+  Serial.println(F("----------Favicon GET Request Received"));
+  ClearMainBuffer();
+  HTTPAddPGMCharToBuffer(&(UECShttpHead404_NotFound[0]));
+  HTTPAddPGMCharToBuffer(&(UECShttpHeadConnectionKeepAlive[0]));
+  HTTPCloseBuffer();
+}
+
 void HTTPsendPageError()
 {
 	HTTPPrintHeader();
@@ -1079,10 +1087,9 @@ void HTTPGetFormDataLANSettingPage()
 		else skip_counter++;
 	}
 	// writing EEPROM, ESP32 specification
-	Serial.println(skip_counter);
 	if (skip_counter < 20)
 	{
-EEPROM.commit();
+		EEPROM.commit();
 	}
 
 	//---------------------------NODE NAME
@@ -1135,7 +1142,7 @@ EEPROM.commit();
 		else skip_counter++;
 	}
 	// writing EEPROM, ESP32 specification
-	Serial.println(skip_counter);
+
 	if (skip_counter < 20)
 	{
 EEPROM.commit();
@@ -1156,11 +1163,16 @@ void HTTPcheckRequest()
 
 		// Add null termination
 		UECSbuffer[UECSclient.read((uint8_t *)UECSbuffer, BUF_SIZE - 1)] = '\0';
-
 		HTTPFilterToBuffer(); // Get first line before "&S=" and eliminate unnecessary code
 		Serial.println(UECSbuffer);
+		
 		int progPos = 0;
 		// Top Page
+
+
+		// if (UECSFindPGMChar(UECSbuffer, &(UECSpageFavicon[0]), &progPos)){
+		// 	HTTPsendFaviconResponse();
+		// }
 		if (UECSFindPGMChar(UECSbuffer, &(UECSaccess_NOSPC_GETP0[0]), &progPos))
 		{
 			HTTPsendPageIndex();
@@ -1275,7 +1287,7 @@ void UECSstartEthernet()
 
 	if (U_orgAttribute.status & STATUS_SAFEMODE)
 	{
-		if (!WiFi.config(defip, defip, defsubnet, defdummy))
+		if (!WiFi.config(default_ip, default_gateway, default_subnet, default_dns))
 		{ // ip,gateway,subnet,dns
 			Serial.println("Failed to configure!");
 		}
@@ -1337,6 +1349,7 @@ void UECSloop()
 	// << USER MANAGEMENT >>
 	// 4. udp16520Send
 	HTTPcheckRequest();
+#if 0
 	UECSupdate16520portReceive(&UECStempCCM, UECSnowmillis);
 	UECSupdate16529port(&UECStempCCM);
 	UserEveryLoop();
@@ -1385,6 +1398,7 @@ void UECSloop()
 			// U_ccmList[i].old_value=U_ccmList[i].value;
 		}
 	}
+#endif
 }
 //------------------------------------------------------
 void UECSinitOrgAttribute()
