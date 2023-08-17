@@ -1,5 +1,6 @@
 ## 概要
-- UARDECSをESP32のWiFiで使えるように移植したライブラリです
+- [UARDECS](https://uecs.org/arduino/uardecs.html)をESP32のWiFiで使えるように移植したライブラリです
+  - 使い方はUARDECSと同じです
 - 実装の詳細はlib内のREADMEから
 - 2023/5/28時点でとりあえず動くんじゃないかといった状況です
   - 現時点では以下の点を確認しています
