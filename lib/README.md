@@ -1,58 +1,9 @@
-
-This directory is intended for project specific (private) libraries.
-PlatformIO will compile them to static libraries and link into executable file.
-
-The source code of each library should be placed in a an own separate directory
-("lib/your_library_name/[here are source files]").
-
-For example, see a structure of the following two libraries `Foo` and `Bar`:
-
-|--lib
-|  |
-|  |--Bar
-|  |  |--docs
-|  |  |--examples
-|  |  |--src
-|  |     |- Bar.c
-|  |     |- Bar.h
-|  |  |- library.json (optional, custom build options, etc) https://docs.platformio.org/page/librarymanager/config.html
-|  |
-|  |--Foo
-|  |  |- Foo.c
-|  |  |- Foo.h
-|  |
-|  |- README --> THIS FILE
-|
-|- platformio.ini
-|--src
-   |- main.c
-
-and a contents of `src/main.c`:
-```
-#include <Foo.h>
-#include <Bar.h>
-
-int main (void)
-{
-  ...
-}
-
-```
-
-PlatformIO Library Dependency Finder will find automatically dependent
-libraries scanning project source files.
-
-More information about PlatformIO Library Dependency Finder
-- https://docs.platformio.org/page/librarymanager/ldf.html
-
----
-## user added info
-
-### 前提条件
+## 前提条件
 - ここで参考にしたライブラリおよび説明書はUARDECS ver2.0.0です。
 - Megaじゃない方なので、CCMサーチの応答は未実装です
+- 以下移植にあたってのメモ書きです
 
-### Ethernetライブラリの解説
+## Ethernetライブラリの解説
 **IPアドレスの設定**
   - 基本はノードのweb pageにブラウザでアクセスして書き換える
     - 書き換えた値は内臓eepromに保存
@@ -121,7 +72,7 @@ if(U_orgAttribute.status&STATUS_SAFEMODE)
         - 受信時にリモートのIPの指定なし
         - 送信時はユニキャスト
 
-### Ethernet to Wifiに伴う書き換え
+## Ethernet to Wifiに伴う書き換え
 - 抽象化されているstrictなどは残して、Ethernetに関する部分だけ書き換えたい
 
 - Ethernet server,client → WiFi server,clientの移行
@@ -164,13 +115,13 @@ if(U_orgAttribute.status&STATUS_SAFEMODE)
       - 元実装だとコメントアウトで未使用だけど、一応Async UDPに存在するメソッドのcloseに置き換え
   - Ethenet.begin() → WiFi.config(), WiFi.begin()
 
-### Arduino to ESP32に伴う仕様変更
+## Arduino to ESP32に伴う仕様変更
 - EEPROM
   - EEPROMの保存領域確保にbegin(確保したいバイト数)が必要
   - EEPROMのread/write関数は同じであるが、ESP32はwriteの後にcommit関数の実行が必要
 
 
-### web pageの仕組み
+## web pageの仕組み
 **HTTPcheckRequest()**
 - アクセス時(server.available())に、クエリに応じて表示するページを選択している
 - 存在しないページであれば `Error!`を表示

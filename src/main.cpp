@@ -1,33 +1,10 @@
 /////////////////////////////////////////
-//UARDECS Sample Program for ADT7410
-//Ver1.2
-//By H.kurosaki 2015/12/10
-//////////////////////////////////////////
-//[概要]
-//温度センサADT7410から温度を読み出してCCMに出力します
-//[使い方]
-//想定する動作環境はAruduinoUNO + Ethernet Shield2を標準としています
-//MEGAでも動きますが、ピン番号の違いに注意して下さい
-//○ArduinoIDE
-//Ver1.7.2以降を使用します
-//○使用するライブラリ
-//UARDECS
-//http://uecs.org/arduino/uardecs.html
-//説明書に従ってインストールしてください
-//
-//○ADT7410の接続
-//センサ→Arduino
-//VDD→5V
-//SCL→SCL(UNOではA5、MEGAではD20も可)
-//SDA→SDA(UNOではA4、MEGAではD21も可)
-//GND→GND
-//
-//○その他
-//D3ピンがIPアドレスのリセット用に使用されています(変更可)
+//UARDECS_ESP32 Sample Program
+// by Yusaku Nakajima
+// andotoecno@gmail.com
 
 #include <EEPROM.h>
 #include "UARDECS_esp32.h"
-
 
 ////////////////////////////WiFi setting
 const char * WiFi_SSID = "";
