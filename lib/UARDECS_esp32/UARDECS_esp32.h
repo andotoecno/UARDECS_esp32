@@ -314,8 +314,8 @@ struct UECSUserHtml{
 
 void UECSinitOrgAttribute();
 void UECSinitCCMList();
-void UECSstartEthernet();
-void UECSresetEthernet();
+void UECSstartWiFi();
+void UECSresetWiFi();
 void SoftReset(void);
 
 void UECS_EEPROM_writeLong(int ee, long value);

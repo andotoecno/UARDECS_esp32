@@ -7,8 +7,8 @@
 #include "UARDECS_esp32.h"
 
 ////////////////////////////WiFi setting
-const char * WiFi_SSID = "";
-const char * WiFi_PASS = "";
+const char * WiFi_SSID = "nano_Guest";
+const char * WiFi_PASS = "nano_Guest";
 
 
 /////////////////////////////////////
@@ -62,14 +62,6 @@ const char ccmTypeEC[] PROGMEM= "EC.mEC";
 const char ccmUnitEC[] PROGMEM= "";
 
 void UserInit(){
-//ESP32のMACアドレスを入力
-U_orgAttribute.mac[0] = 0x7C;
-U_orgAttribute.mac[1] = 0x9E;
-U_orgAttribute.mac[2] = 0xBD;
-U_orgAttribute.mac[3] = 0x91;
-U_orgAttribute.mac[4] = 0x5C;
-U_orgAttribute.mac[5] = 0x50;
-
 // ROOM,Region,Orderを設定
 U_orgAttribute.room = 1;
 U_orgAttribute.region = 1;
