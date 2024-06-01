@@ -1,9 +1,15 @@
-## 前提条件
+## 更新ログ
+- ノードとして接続できることを確認しましたが、ESP32側から送信処理などを行うと落ちてしまいます(2023/3/21)
+  - とりあえず、治りました(2023/5/28)
+  - webpage表示時にWiFiclientのavailableとconnectedのチェックをいれて治りましたが、これで正しいのかよく分かってないのです...(要追加調査)
+
+## ライブラリ実装の記録
+### 前提条件
 - ここで参考にしたライブラリおよび説明書はUARDECS ver2.0.0です。
 - Megaじゃない方なので、CCMサーチの応答は未実装です
 - 以下移植にあたってのメモ書きです
 
-## Ethernetライブラリの解説
+### Ethernetライブラリの解説
 **IPアドレスの設定**
   - 基本はノードのweb pageにブラウザでアクセスして書き換える
     - 書き換えた値は内臓eepromに保存
@@ -72,7 +78,7 @@ if(U_orgAttribute.status&STATUS_SAFEMODE)
         - 受信時にリモートのIPの指定なし
         - 送信時はユニキャスト
 
-## Ethernet to Wifiに伴う書き換え
+### Ethernet to Wifiに伴う書き換え
 - 抽象化されているstrictなどは残して、Ethernetに関する部分だけ書き換えたい
 
 - Ethernet server,client → WiFi server,clientの移行
@@ -115,19 +121,19 @@ if(U_orgAttribute.status&STATUS_SAFEMODE)
       - 元実装だとコメントアウトで未使用だけど、一応Async UDPに存在するメソッドのcloseに置き換え
   - Ethenet.begin() → WiFi.config(), WiFi.begin()
 
-## Arduino to ESP32に伴う仕様変更
+### Arduino to ESP32に伴う仕様変更
 - EEPROM
   - EEPROMの保存領域確保にbegin(確保したいバイト数)が必要
   - EEPROMのread/write関数は同じであるが、ESP32はwriteの後にcommit関数の実行が必要
 
 
-## web pageの仕組み
+### web pageの仕組み
 **HTTPcheckRequest()**
 - アクセス時(server.available())に、クエリに応じて表示するページを選択している
 - 存在しないページであれば `Error!`を表示
 
 
-##　Debug
+###　Debug
 - 2023/3/21
 - webページ上の`send`アイコンのクリック時に`GET/1HTTP/1.1`が送られるはずが、`GET/favicon.icoHTTP/1.1`が送られている
   - faviconはお気に入り登録を押した時のクエリのようで、ウェブページ上のアイコンを押した時の挙動として、ESP32のライブラリの仕様なのか連続で押すとなぜかfaviconになっている
@@ -135,7 +141,7 @@ if(U_orgAttribute.status&STATUS_SAFEMODE)
   - ESP32での回避についてはここが参考になった
     - https://www.mgo-tec.com/blog-entry-esp32-mjpeg-bmp.html/3
 
-##　ToDo
+###　ToDo
 - WIFiのSSID,passもノードのwebpageのアクセスして設定
 - 受診失敗時のリセット
 - デフォルトipはユーザーが設定できるように
