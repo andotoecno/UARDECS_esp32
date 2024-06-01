@@ -7,8 +7,8 @@
 #include "UARDECS_esp32.h"
 
 ////////////////////////////WiFi setting
-const char * WiFi_SSID = "nano_Guest";
-const char * WiFi_PASS = "nano_Guest";
+const char * WiFi_SSID = "";
+const char * WiFi_PASS = "";
 
 
 /////////////////////////////////////
