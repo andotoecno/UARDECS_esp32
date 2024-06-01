@@ -20,11 +20,11 @@
 
 #define CHOICES(s) sizeof(s)/sizeof(s[0])
 
-const char UECSdefaultIPAddress[] PROGMEM="192.168.43.7";
-const byte default_ip[] = {192, 168, 43, 7};
-const byte default_gateway[] = {192, 168, 43, 1};
+const char UECSdefaultIPAddress[] PROGMEM="192.168.102.7";
+const byte default_ip[] = {192, 168, 102, 7};
+const byte default_gateway[] = {192, 168, 102, 1};
 const byte default_subnet[] = {255, 255, 255, 0};
-const byte default_dns[] = {192, 168, 43, 1};
+const byte default_dns[] = {192, 168, 102, 1};
 //############################################################
 //############################################################
 

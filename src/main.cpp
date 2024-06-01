@@ -20,8 +20,8 @@ const byte U_InitPin_Sense=HIGH;
 ////////////////////////////////////
 //Node basic infomation
 ///////////////////////////////////
-const char U_name[] PROGMEM= "UARDECS Node v.1.0";
-const char U_vender[] PROGMEM= "XXXXXX Co.";
+const char U_name[] PROGMEM= "UARDECS-ESP32 Node v.1.0";
+const char U_vender[] PROGMEM= "Andotoecno";
 const char U_uecsid[] PROGMEM= "000000000000";
 const char U_footnote[] PROGMEM= "Test node";
 char U_nodename[20] = "TestNode";
@@ -32,7 +32,6 @@ UECSOriginalAttribute U_orgAttribute;
 const int U_HtmlLine = 1; //Total number of HTML table rows.
 const char NAME[] PROGMEM= "Sensor";
 const char UNIT[] PROGMEM= "";
-const char NONES[] PROGMEM= "";
 const char note1[] PROGMEM= "test";
 signed long web_value;
 const char** dummy = NULL;
@@ -46,21 +45,21 @@ struct UECSUserHtml U_html[U_HtmlLine]={
 //define CCMID for identify
 //CCMID_dummy must put on last
 enum {
-CCMID_SenserValue,
-CCMID_cnd,
+CCMID_WaterVolume,
+CCMID_EC,
 CCMID_dummy,
 };
 
 const int U_MAX_CCM = CCMID_dummy;
 UECSCCM U_ccmList[U_MAX_CCM];
 
-const char ccmNameSensor[] PROGMEM= "Sensor";
-const char ccmTypeSensor[] PROGMEM= "Value";
-const char ccmUnitSensor[] PROGMEM= "";
+const char ccmNameWaterVolume[] PROGMEM= "WaterVolumeNode";
+const char ccmTypeWaterVolume[] PROGMEM= "WaterVolume.mWV";
+const char ccmUnitWaterVolume[] PROGMEM= "";
 
-const char ccmNameCnd[] PROGMEM= "NodeCondition";
-const char ccmTypeCnd[] PROGMEM= "cnd.mIC";
-const char ccmUnitCnd[] PROGMEM= "";
+const char ccmNameEC[] PROGMEM= "ECNode";
+const char ccmTypeEC[] PROGMEM= "EC.mEC";
+const char ccmUnitEC[] PROGMEM= "";
 
 void UserInit(){
 //ESP32のMACアドレスを入力
@@ -71,17 +70,22 @@ U_orgAttribute.mac[3] = 0x91;
 U_orgAttribute.mac[4] = 0x5C;
 U_orgAttribute.mac[5] = 0x50;
 
+// ROOM,Region,Orderを設定
+U_orgAttribute.room = 1;
+U_orgAttribute.region = 1;
+U_orgAttribute.order = 1;
+
 //Set ccm list
-UECSsetCCM(true, CCMID_SenserValue, ccmNameSensor, ccmTypeSensor, ccmUnitSensor, 29, 1, A_1S_0);
-UECSsetCCM(true,  CCMID_cnd      , ccmNameCnd , ccmTypeCnd , ccmUnitCnd , 29, 0, A_10S_0);
+//UECSsetCCM(送受信の区分,通し番号,CCM説明,Type,単位,priority,少数桁数,送信頻度設定[A_1S_0で1秒間隔])
+UECSsetCCM(true, CCMID_WaterVolume, ccmNameWaterVolume, ccmTypeWaterVolume, ccmUnitWaterVolume, 29, 1, A_1S_0);
+UECSsetCCM(true,  CCMID_EC      , ccmNameEC , ccmTypeEC , ccmUnitEC , 29, 2, A_1S_0);
 }
 void OnWebFormRecieved(){
 }
 void UserEverySecond(){
   // add value
-  U_ccmList[CCMID_SenserValue].value++;
-  // nothing error -> cnd=0
-  U_ccmList[CCMID_cnd].value=0;
+  U_ccmList[CCMID_WaterVolume].value++;
+  U_ccmList[CCMID_EC].value++;
   }
 void UserEveryMinute(){
 }
@@ -92,5 +96,7 @@ UECSloop();
 }
 void setup(){
 UECSsetup();
-U_ccmList[CCMID_SenserValue].value=100;
+U_ccmList[CCMID_WaterVolume].value=100;
+U_ccmList[CCMID_EC].value=1;
+
 }
