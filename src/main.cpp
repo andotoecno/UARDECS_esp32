@@ -54,11 +54,11 @@ const int U_MAX_CCM = CCMID_dummy;
 UECSCCM U_ccmList[U_MAX_CCM];
 
 const char ccmNameWaterVolume[] PROGMEM= "WaterVolumeNode";
-const char ccmTypeWaterVolume[] PROGMEM= "WaterVolume.mWV";
+const char ccmTypeWaterVolume[] PROGMEM= "WaterVolume.mMC";
 const char ccmUnitWaterVolume[] PROGMEM= "";
 
 const char ccmNameEC[] PROGMEM= "ECNode";
-const char ccmTypeEC[] PROGMEM= "EC.mEC";
+const char ccmTypeEC[] PROGMEM= "EC.mMC";
 const char ccmUnitEC[] PROGMEM= "";
 
 void UserInit(){
