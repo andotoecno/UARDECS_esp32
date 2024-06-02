@@ -1268,7 +1268,6 @@ void UECSsetup()
 	delay(500);
 	pinMode(U_InitPin, INPUT_PULLUP);
 
-	EEPROM.begin(1024);
 	Serial.begin(115200);
 
 	if (digitalRead(U_InitPin) == U_InitPin_Sense || UECS_EEPROM_readLong(EEPROM_OFFSET_IP) == -1)

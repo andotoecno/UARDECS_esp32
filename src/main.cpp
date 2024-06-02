@@ -92,6 +92,7 @@ void loop(){
 UECSloop();
 }
 void setup(){
+EEPROM.begin(1024);// you need to call this function once
 UECSsetup();
 U_ccmList[CCMID_WaterVolume].value=100;
 U_ccmList[CCMID_EC].value=1;
