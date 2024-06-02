@@ -20,11 +20,7 @@
 
 #define CHOICES(s) sizeof(s)/sizeof(s[0])
 
-const char UECSdefaultIPAddress[] PROGMEM="192.168.102.7";
-const byte default_ip[] = {192, 168, 102, 7};
-const byte default_gateway[] = {192, 168, 102, 1};
-const byte default_subnet[] = {255, 255, 255, 0};
-const byte default_dns[] = {192, 168, 102, 1};
+
 //############################################################
 //############################################################
 
@@ -352,6 +348,12 @@ void UECSsetCCM(boolean _sender, signed char _num, const char* _name, const char
 
 extern const char * WiFi_SSID;
 extern const char * WiFi_PASS;
+
+extern const char UECSdefaultIPAddress[] PROGMEM;
+extern const byte default_ip[];
+extern const byte default_gateway[];
+extern const byte default_subnet[];
+extern const byte default_dns[];
 
 extern const int U_MAX_CCM;
 extern const int U_HtmlLine;

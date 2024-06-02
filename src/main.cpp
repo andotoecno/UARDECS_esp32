@@ -10,20 +10,25 @@
 const char * WiFi_SSID = "";
 const char * WiFi_PASS = "";
 
+const char UECSdefaultIPAddress[] PROGMEM="192.168.102.7";
+const byte default_ip[] = {192, 168, 102, 7};
+const byte default_gateway[] = {192, 168, 102, 1};
+const byte default_subnet[] = {255, 255, 255, 0};
+const byte default_dns[] = {192, 168, 102, 1};
 
 /////////////////////////////////////
 //IP reset jupmer pin setting
 /////////////////////////////////////
 //Pin ID. This pin is pull-upped automatically.
 const byte U_InitPin = 26;//このピンは変更可能です
-const byte U_InitPin_Sense=HIGH;
+const byte U_InitPin_Sense=LOW;
 ////////////////////////////////////
 //Node basic infomation
 ///////////////////////////////////
 const char U_name[] PROGMEM= "UARDECS-ESP32 Node v.1.0";
 const char U_vender[] PROGMEM= "Andotoecno";
 const char U_uecsid[] PROGMEM= "000000000000";
-const char U_footnote[] PROGMEM= "Test node";
+const char U_footnote[] PROGMEM= "UARDECS-ESP32 Sample Program";
 char U_nodename[20] = "TestNode";
 UECSOriginalAttribute U_orgAttribute;
 //////////////////////////////////

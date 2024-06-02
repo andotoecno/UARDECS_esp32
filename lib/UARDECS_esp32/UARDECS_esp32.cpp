@@ -1293,14 +1293,13 @@ void UECSstartWiFi()
 {
 	/*MAC address*/
 	uint8_t mac_buf[6];
-  	esp_read_mac(mac_buf, ESP_MAC_WIFI_STA);
+	esp_read_mac(mac_buf, ESP_MAC_WIFI_STA);
 	U_orgAttribute.mac[0] = mac_buf[0];
 	U_orgAttribute.mac[1] = mac_buf[1];
 	U_orgAttribute.mac[2] = mac_buf[2];
 	U_orgAttribute.mac[3] = mac_buf[3];
 	U_orgAttribute.mac[4] = mac_buf[4];
 	U_orgAttribute.mac[5] = mac_buf[5];
-
 
 	if (U_orgAttribute.status & STATUS_SAFEMODE)
 	{
@@ -1320,24 +1319,33 @@ void UECSstartWiFi()
 	WiFi.begin(WiFi_SSID, WiFi_PASS);
 	Serial.println("WiFi SSID: " + String(WiFi_SSID));
 	Serial.println("WiFi PASS: " + String(WiFi_PASS));
-	
+
 	while (WiFi.status() != WL_CONNECTED)
 	{
 		delay(2000);
 		Serial.println("WiFi connecting...");
 	}
 	Serial.println("WiFi connected");
-	Serial.println(WiFi.localIP());
-	char mac[20],ip[20], gateway[20], subnet[20];
-	sprintf(mac, "%02X:%02X:%02X:%02X:%02X:%02X", U_orgAttribute.mac[0], U_orgAttribute.mac[1], U_orgAttribute.mac[2], U_orgAttribute.mac[3], U_orgAttribute.mac[4], U_orgAttribute.mac[5]);
-	sprintf(ip, "%d.%d.%d.%d", U_orgAttribute.ip[0], U_orgAttribute.ip[1], U_orgAttribute.ip[2], U_orgAttribute.ip[3]);
-	sprintf(gateway, "%d.%d.%d.%d", U_orgAttribute.gateway[0], U_orgAttribute.gateway[1], U_orgAttribute.gateway[2], U_orgAttribute.gateway[3]);
-	sprintf(subnet, "%d.%d.%d.%d", U_orgAttribute.subnet[0], U_orgAttribute.subnet[1], U_orgAttribute.subnet[2], U_orgAttribute.subnet[3]);
+
+	char mac[50], ip[50], gateway[50], subnet[50];
+	sprintf(mac, "%S%02X:%02X:%02X:%02X:%02X:%02X", "MAC\t\t", U_orgAttribute.mac[0], U_orgAttribute.mac[1], U_orgAttribute.mac[2], U_orgAttribute.mac[3], U_orgAttribute.mac[4], U_orgAttribute.mac[5]);
 	Serial.println(mac);
+
+	sprintf(ip, "%S%S", "Node IP\t\t", WiFi.localIP().toString().c_str());
+	sprintf(gateway, "%S%S", "Node GateWay\t", WiFi.gatewayIP().toString().c_str());
+	sprintf(subnet, "%S%S", "Node Subnet\t", WiFi.subnetMask().toString().c_str());
 	Serial.println(ip);
 	Serial.println(gateway);
 	Serial.println(subnet);
-
+	if (U_orgAttribute.status & STATUS_SAFEMODE)
+	{
+		sprintf(ip, "%S%d.%d.%d.%d", "Saved IP\t", U_orgAttribute.ip[0], U_orgAttribute.ip[1], U_orgAttribute.ip[2], U_orgAttribute.ip[3]);
+		sprintf(gateway, "%S%d.%d.%d.%d", "Saved GateWay\t", U_orgAttribute.gateway[0], U_orgAttribute.gateway[1], U_orgAttribute.gateway[2], U_orgAttribute.gateway[3]);
+		sprintf(subnet, "%S%d.%d.%d.%d", "Saved Subnet\t", U_orgAttribute.subnet[0], U_orgAttribute.subnet[1], U_orgAttribute.subnet[2], U_orgAttribute.subnet[3]);
+		Serial.println(ip);
+		Serial.println(gateway);
+		Serial.println(subnet);
+	}
 	UECSlogserver.begin();
 }
 
